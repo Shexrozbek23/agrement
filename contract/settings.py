@@ -15,7 +15,17 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+if os.name == 'nt':
+    import platform
+    OSGeo4W = r"C:\OSGeo4W"
+    
+    os.environ['OSGEO4W_ROOT'] = OSGeo4W
+    os.environ['GDAL_DATA'] = OSGeo4W + r"\share\gdal"
+    os.environ['PROJ_LIB'] = OSGeo4W + r"\share\proj"
+    os.environ['PATH'] = OSGeo4W + r"\bin;" + os.environ['PATH']
+    #os.environ['GDAL_DATA'] = "C:\Program Files\GDAL\gdal-data" 
+    GDAL_LIBRARY_PATH = r'C:\OSGeo4W\bin\gdal304.dll'
+    GEOS_LIBRARY_PATH=r'C:\OSGeo4W\bin\geos_c.dll'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -37,11 +47,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'django.contrib.gis',
+    'leaflet',
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
     'contract_app',
+    'rest_framework_gis',
 ]
 
 MIDDLEWARE = [
@@ -90,7 +102,7 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'contract',
         'USER': 'postgres',
         'HOST': '127.0.0.1',

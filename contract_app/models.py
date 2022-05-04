@@ -3,6 +3,7 @@ import qrcode
 from PIL import Image, ImageDraw
 from io import BytesIO
 from django.core.files import File
+from django.contrib.gis.db import models
 #Region model
 class Region(models.Model):
     name_ru = models.CharField(max_length=512, verbose_name='Название регион')
@@ -87,6 +88,7 @@ class Oferta(models.Model):
     general_inspection =  models.ForeignKey(inspection_general, on_delete=models.DO_NOTHING, verbose_name='Директор')
     added_at = models.DateTimeField(auto_now_add=True, editable=False, verbose_name='Добавлено в')
     updated_at = models.DateTimeField(auto_now=True, editable=False)
+    adress_location = models.PointField(geography=True,srid=4326, null=True,blank=True)
     def __str__(self):
         return self.applicant_fullname
 

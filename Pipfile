@@ -14,6 +14,8 @@ xhtml2pdf = "*"
 django-environ = "*"
 psycopg-binary = "*"
 qrcode = "*"
+django-leaflet = "*"
+djangorestframework-gis = "*"
 
 [dev-packages]
 

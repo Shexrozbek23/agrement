@@ -1,5 +1,4 @@
-from email.mime import application
-from re import template
+
 from django.shortcuts import render
 from rest_framework import generics, views, response, status
 from rest_framework.response import Response
@@ -14,27 +13,13 @@ from xhtml2pdf import pisa
 import datetime
 from .models import Oferta,inspection_general,type_service,product_type,District,Region
 from .numer_write_word import son,float2comma
-import qrcode
-import qrcode.image.svg
+
 from io import BytesIO
 from django.views.generic import View
 from django.conf import settings
 # Create your views here.
 import os
-class index(View):
-    def get(self,request,*args,**kwargs):
-        context = {}
-        qr_url='http://127.0.0.1:8000/?inn={}&aferta_number={}'.format(84654654,5464565465)
-        sa=QrCode.objects.create(url=qr_url)
-        
-        
-        template=get_template('qrcode.html')
-        html=template.render(context)
-        result=BytesIO()
-        pdf=pisa.pisaDocument(BytesIO(html.encode('ISO-8859-1')),result,os.path.join(settings.BASE_DIR, "media", 'products_report.pdf'))
-        if pdf.err:
-            return HttpResponse('We had some errors <pre>' + html + '</pre>')
-        return HttpResponse(result.getvalue(),content_type='application/pdf')
+
 
 
 
@@ -176,6 +161,7 @@ class Agrement(views.APIView):
             rector=inspection_general.objects.get(id=1)
             data['general_inspection']=rector
             data['code_number']=invoice_number
+            print(data.get('adress_location'))
             oneagremment = Oferta.objects.create(**data)
             oneagremment.save()
             return Response(allcontractserializer(oneagremment).data,status=status.HTTP_200_OK)
