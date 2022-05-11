@@ -229,7 +229,7 @@ class PdfVersionView(View):
         Detail = OfertaDetail.objects.all().first()
         # OfertaDetail, _ = OfertaDetail.objects.get_or_create(inn=12313)
         # information for pdf
-        qr_url = '{}?inn={}&aferta_number={}'.format(4545,154,445)
+        qr_url = 'http://127.0.0.1:8000/agrement/aferta/{}/pdf/'.format(contract.code_number)
         sa = QrCode.objects.create(url=qr_url)
         info = {
             "id": contract.id,
