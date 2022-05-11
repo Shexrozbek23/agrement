@@ -34,7 +34,7 @@ class District(models.Model):
         db_table = 'district'
 
 # type of serveice model
-class type_service(models.Model):
+class TypeService(models.Model):
     type=models.CharField(max_length=500)
     value=models.FloatField()
     added_at = models.DateTimeField(auto_now_add=True, editable=False, verbose_name='Добавлено в')
@@ -42,16 +42,17 @@ class type_service(models.Model):
     def __str__(self):
         return self.type
 
-#type of crop model
-class product_type(models.Model):    
-    type=models.CharField(max_length=500)
+# type of serveice model 2 for 
+class TwoTypeService(models.Model):
+    type= models.ForeignKey(TypeService, on_delete=models.DO_NOTHING, verbose_name='Xizmat turi')
+    value=models.FloatField()
     added_at = models.DateTimeField(auto_now_add=True, editable=False, verbose_name='Добавлено в')
     updated_at = models.DateTimeField(auto_now=True, editable=False)
     def __str__(self):
-        return self.type
+        return self.type.type
 
 #rector model
-class inspection_general(models.Model):
+class InspectionGeneral(models.Model):
     name=models.CharField(max_length=500,default='')
     added_at = models.DateTimeField(auto_now_add=True, editable=False, verbose_name='Добавлено в')
     updated_at = models.DateTimeField(auto_now=True, editable=False)
@@ -59,7 +60,7 @@ class inspection_general(models.Model):
         return self.name
 
 #Personal data model about oferta(adress,x_r.bank_card,inn,phone_nomer)
-class Oferta_detail(models.Model):
+class OfertaDetail(models.Model):
     adress=models.CharField(max_length=100,verbose_name='Manzil')
     x_r=models.CharField(max_length=90,verbose_name='X/R')
     sh_x=models.CharField(max_length=90,verbose_name='Sh.X')
@@ -75,9 +76,9 @@ class Oferta(models.Model):
     district = models.ForeignKey(District, on_delete=models.DO_NOTHING, verbose_name='Код дистрикт заявителя')
     code_number= models.CharField(max_length=18, verbose_name='Номер Оферта', unique=True, null=True,blank=True)
     given_date = models.DateField(auto_now_add=True, verbose_name='Дата выдачи')
-    service_type = models.ForeignKey(type_service,on_delete=models.DO_NOTHING,related_name='service_type',verbose_name='Service Type',default=0)
+    service_type = models.ForeignKey(TypeService,on_delete=models.DO_NOTHING,related_name='service_type',verbose_name='Service Type',default=0)
     cadastre_number=models.IntegerField()
-    product_type=models.ForeignKey(product_type,on_delete=models.DO_NOTHING,related_name='product_type',verbose_name='product_type',default=0)
+    product_type=models.CharField(max_length=300,default='')
     square_of_services = models.FloatField(verbose_name='Количество',default=0)
     payment_amount = models.DecimalField(verbose_name='Сумма платежа', max_digits=15, decimal_places=2,blank=True)
     paid_amount = models.DecimalField(verbose_name='Оплаченное количество', max_digits=15, decimal_places=2,default=0)
@@ -85,28 +86,26 @@ class Oferta(models.Model):
     applicant_tin = models.CharField(verbose_name='ИНН/ПИНФЛ заявителя', max_length=15, null=True)
     applicant_fullname = models.CharField(verbose_name='ФИО заявителя', max_length=60, null=True)
     applicant_phone = models.CharField(verbose_name='Телефонный номер', max_length=9, null=True)
-    general_inspection =  models.ForeignKey(inspection_general, on_delete=models.DO_NOTHING, verbose_name='Директор')
+    general_inspection =  models.ForeignKey(InspectionGeneral, on_delete=models.DO_NOTHING, verbose_name='Директор')
     added_at = models.DateTimeField(auto_now_add=True, editable=False, verbose_name='Добавлено в')
     updated_at = models.DateTimeField(auto_now=True, editable=False)
     adress_location = models.PointField(geography=True,srid=4326, null=True,blank=True)
     def __str__(self):
         return self.applicant_fullname
 
-
+#qr code create and save
 import random
 class QrCode(models.Model):
    url=models.URLField()
    image=models.ImageField(upload_to='qrcode/',blank=True)
 
    def save(self,*args,**kwargs):
-       
-       
-      qrcode_img=qrcode.make(self.url)
-      canvas=Image.new("RGB", (500,500),"white")
-      draw=ImageDraw.Draw(canvas)
-      canvas.paste(qrcode_img)
-      buffer=BytesIO()
-      canvas.save(buffer,"PNG")
-      self.image.save(f'image{random.randint(0,999999)}.png',File(buffer),save=False)
-      canvas.close()
-      super().save(*args,**kwargs)
+        qrcode_img=qrcode.make(self.url)
+        canvas=Image.new("RGB", (500,500),"white")
+        draw=ImageDraw.Draw(canvas)
+        canvas.paste(qrcode_img)
+        buffer=BytesIO()
+        canvas.save(buffer,"PNG")
+        self.image.save(f'image{random.randint(0,999999)}.png',File(buffer),save=False)
+        canvas.close()
+        super().save(*args,**kwargs)

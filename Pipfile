@@ -16,6 +16,8 @@ psycopg-binary = "*"
 qrcode = "*"
 django-leaflet = "*"
 djangorestframework-gis = "*"
+django-rest-swagger = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

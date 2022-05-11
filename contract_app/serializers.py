@@ -1,34 +1,39 @@
 from rest_framework import serializers
-from .models import Oferta,inspection_general,type_service,product_type
+from .models import Oferta,InspectionGeneral,TypeService,District,Region
 from rest_framework_gis.serializers import GeoModelSerializer
 #get serializer information about the rector
-class inspection_generalSerializer(serializers.ModelSerializer):
+class InspectionGeneralSerializer(serializers.ModelSerializer):
     class Meta:
-        model =inspection_general
+        model =InspectionGeneral
         fields = "__all__"
 
 #get serializer information about type of service
-class type_serviceSerializer(serializers.ModelSerializer):
+class TypeServiceSerializer(serializers.ModelSerializer):
     class Meta:
-        model =type_service
+        model =TypeService
         fields = "__all__"
 
-#get serializer information about crop type
-class product_typeSerializer(serializers.ModelSerializer):
+#get serializer information about district
+class DistricteSerializer(serializers.ModelSerializer):
     class Meta:
-        model =product_type
+        model =District
+        fields = "__all__"
+
+#get serializer information about region
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =Region
         fields = "__all__"
 
 #get serializer information about all contract
-class allcontractserializer(serializers.ModelSerializer):
-    product_type=product_typeSerializer()
-    service_type=type_serviceSerializer()
-    general_inspection=inspection_generalSerializer()
+class AllContractserializer(serializers.ModelSerializer):
+    service_type=TypeServiceSerializer()
+    general_inspection=InspectionGeneralSerializer()
     class Meta:
         model =Oferta
         fields = "__all__"
 #get serializer information about all contract
-class concluding_contract_serializer(GeoModelSerializer):
+class ConcludingContractSerializer(GeoModelSerializer):
     class Meta:
         model =Oferta
         geo_field = 'adress_location'
@@ -46,11 +51,11 @@ class concluding_contract_serializer(GeoModelSerializer):
             'applicant_fullname': {'required': True},
             'applicant_phone': {'required': True},
             'payment_amount': {'required': False},
-            'adress_location': {'required': False},
-
+            'adress_location': {'required': True},
         }
-
-class inn_or_code_number_serializer(serializers.ModelSerializer):
+        
+#get serializer information about inn and aferta number
+class InnOrCodeNumberSerializer(serializers.ModelSerializer):
      class Meta:
         model =Oferta
         fields = ['applicant_tin','code_number']

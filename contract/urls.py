@@ -14,12 +14,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import re_path as url
+from django.contrib import admin
+from django.urls import path, include, re_path
+from rest_framework_swagger.views import get_swagger_view
+from frontend.views import index
+
+schema_view = get_swagger_view(title='Soil Test API', url='/')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('',include('contract_app.urls')),
+    path('agrement/',include('contract_app.urls')),
+    url('api/doc', schema_view),
+    re_path(r"^$", index),
+    re_path(r"^(?:.*)/?$", index),
 ]
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
