@@ -1,13 +1,14 @@
-django = "*"
-djangorestframework = "*"
-markdown = "*"
-django-filter = "*"
-psycopg2 = "*"
-pandas = "*"
-xhtml2pdf = "*"
-django-environ = "*"
-psycopg-binary = "*"
-qrcode = "*"
-django-leaflet = "*"
-djangorestframework-gis = "*"
-django-rest-swagger = "*"
+django
+djangorestframework
+markdown
+django-filter
+psycopg2
+pandas
+xhtml2pdf
+django-environ
+psycopg-binary
+qrcode
+django-leaflet
+djangorestframework-gis
+django-rest-swagger
+django-cors-headers
